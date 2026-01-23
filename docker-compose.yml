@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: _docker/nginx/Dockerfile
+    container_name: symfony-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - php
+    networks:
+      - symfony-network
+
+  php:
+    build:
+      context: .
+      dockerfile: _docker/php/Dockerfile
+    container_name: symfony-php
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - symfony-network
+
+  database:
+    image: postgres:16-alpine
+    container_name: symfony-database
+    environment:
+      POSTGRES_DB: symfony_notes
+      POSTGRES_USER: symfony
+      POSTGRES_PASSWORD: symfony_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - symfony-network
+
+volumes:
+  db_data:
+
+networks:
+  symfony-network:
+    driver: bridge

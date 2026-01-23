@@ -1,0 +1,13 @@
+.git
+.gitignore
+.idea
+.vscode
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+.dockerignore
+README.md
+var/cache/*
+var/log/*
+vendor/
+node_modules/
