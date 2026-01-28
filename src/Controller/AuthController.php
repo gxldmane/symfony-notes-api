@@ -9,6 +9,7 @@ use App\Factory\UserFactory;
 use App\Response\UserResponseBuilder;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class AuthController extends AbstractController
         private readonly UserService         $userService,
         private readonly DtoValidator        $dtoValidator,
         private readonly UserResponseBuilder $userResponse,
+        private readonly Security            $security,
     )
     {
     }
@@ -33,5 +35,12 @@ class AuthController extends AbstractController
         $this->dtoValidator->validate($dto);
         $user = $this->userService->create($dto);
         return $this->userResponse->registerResponse($user, Response::HTTP_CREATED);
+    }
+
+    #[Route('/api/auth/me', name: 'auth_me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+        $user = $this->security->getUser();
+        return $this->userResponse->meResponse($user, Response::HTTP_OK);
     }
 }

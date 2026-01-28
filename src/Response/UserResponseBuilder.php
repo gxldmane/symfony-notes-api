@@ -28,4 +28,14 @@ class UserResponseBuilder
             'token' => $this->jwt->create($user)
         ], status: $status);
     }
+    
+    public function meResponse(User $user, int $status): JsonResponse
+    {
+        $outputDto = $this->userFactory->makeUserOutputDto($user);
+        $userResource = json_decode($this->userResource->asItem($outputDto));
+
+        return new JsonResponse([
+            'user' => $userResource,
+        ], status: $status);
+    }
 }

@@ -12,7 +12,7 @@ class UserService
 {
     public function __construct(
         private readonly UserRepository $userRepo,
-        private readonly UserFactory $userFactory,
+        private readonly UserFactory    $userFactory,
     )
     {
     }
